@@ -19,6 +19,7 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Loader;
 import javassist.LoaderClassPath;
@@ -438,6 +439,11 @@ public class GwtMockitoTestRunner extends BlockJUnit4ClassRunner {
       clazz.getClassFile().setAccessFlags(clazz.getClassFile().getAccessFlags() & ~AccessFlag.FINAL);
       for (CtMethod method : clazz.getDeclaredMethods()) {
         method.setModifiers(method.getModifiers() & ~Modifier.FINAL);
+      }
+      if (!clazz.isInterface()) {
+        for (CtField field : clazz.getDeclaredFields()) {
+          field.setModifiers(field.getModifiers() & ~Modifier.FINAL);
+        }
       }
 
       // Create stub implementations for certain methods
